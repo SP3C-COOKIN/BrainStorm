@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String
+  email     String   @unique
+  password  String
+  worlds    World[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model World {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  genre       String?
+  colorTheme  String?
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  characters  Character[]
+  notes       Note[]
+  genres      String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Character {
+  id               String   @id @default(uuid())
+  name             String
+  shortDescription String?
+  notes            String?
+  worldId          String
+  world            World    @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Note {
+  id        String   @id @default(uuid())
+  title     String
+  content   String?
+  worldId   String
+  world     World    @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
