@@ -1,5 +1,7 @@
 import { z } from "zod"; // this imports { z }?? from zod what is {z} tho?
 
+// SIGN-UP VALIDATION
+
 export const signupSchema = z.object({ // we export z.object what is that? and also turn it into a constant variable at the same time thats crazy what
   username: z // we put the username as z? why? or what is it then?
     .string() // we expect a string for username
@@ -18,3 +20,17 @@ export const signupSchema = z.object({ // we export z.object what is that? and a
     .min(8, "Password must be at least 8 characters")
     .max(72, "Password is too long"),
 });
+
+// LOGIN VALIDATION
+
+export const loginSchema = z.object({
+    identifier: z
+    .string()
+    .min(1, "Email or Username is Required")
+    .max(80, "Identifier too long"),
+
+    password: z
+    .string()
+    .min(1, "Password is Required")
+    .max(72, "Password is too long"),
+})
