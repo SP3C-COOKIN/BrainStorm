@@ -1,9 +1,10 @@
 import prisma from "../lib/prisma.js";
+
 import { signupSchema } from "../validators/authValidation.js";
+import { loginSchema } from "../validators/authValidation.js";
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-import { loginSchema } from "../validators/authValidation.js";
 
 // SIGN-UP FUNCTION
 export const signup = async (req, res) => {
