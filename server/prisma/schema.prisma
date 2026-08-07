@@ -21,7 +21,6 @@ model World {
   id          String      @id @default(uuid())
   name        String
   description String?
-  genre       String?
   colorTheme  String?
   userId      String
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
