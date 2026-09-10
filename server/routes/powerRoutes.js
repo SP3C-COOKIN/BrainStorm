@@ -13,10 +13,10 @@ import { validatePowerCreate, validatePowerUpdate } from "../middleware/powerMid
 
 const router = express.Router();
 
-router.post("/worlds", authMiddleware, validatePowerCreate, createPower);
-router.get("/worlds/:worldId", authMiddleware, getPower);
-router.get("/worlds", authMiddleware, getPowers);
-router.patch("/worlds/:worldId", authMiddleware, validatePowerUpdate, editPower);
-router.delete("/worlds/:worldId", authMiddleware, deletePower);
+router.post("/powers", authMiddleware, validatePowerCreate, createPower);
+router.get("/powers/:powerId", authMiddleware, getPower);
+router.get("/powers", authMiddleware, getPowers);
+router.patch("/powers/:powerId", authMiddleware, validatePowerUpdate, editPower);
+router.delete("/power/:powerId", authMiddleware, deletePower);
 
 export default router;
