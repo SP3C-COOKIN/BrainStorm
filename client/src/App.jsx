@@ -32,7 +32,7 @@ function App() {
             email,
             username,
             password,
-          }
+          }/*  */
         : {
             identifier: email,
             password,

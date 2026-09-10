@@ -4,50 +4,359 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url     = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
+// ====================
+// USER
+// ====================
+
 model User {
-  id        String   @id @default(uuid())
-  username  String
-  email     String   @unique
-  password  String  
-  worlds    World[]
+  id       String @id @default(uuid())
+  username String
+  email    String @unique
+  password String
+
+  worlds        World[]
+  characters    Character[]
+  powers        Power[]
+  scenes        Scene[]
+  quickCaptures QuickCapture[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+// ====================
+// WORLD → STORY → CHAPTER
+// ====================
+
 model World {
-  id          String      @id @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
   colorTheme  String?
-  userId      String
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  characters  Character[]
-  notes       Note[]
   genres      String[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-}
 
-model Character {
-  id               String   @id @default(uuid())
-  name             String
-  shortDescription String?
-  notes            String?
-  worldId          String
-  world            World    @relation(fields: [worldId], references: [id], onDelete: Cascade)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-}
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model Note {
-  id        String   @id @default(uuid())
-  title     String
-  content   String?
-  worldId   String
-  world     World    @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  stories Story[]
+
+  worldCharacters WorldCharacter[]
+  worldPowers     WorldPower[]
+  sceneWorlds     SceneWorld[]
+
+  quickCaptureWorlds QuickCaptureWorld[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Story {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  worldId String
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  chapters Chapter[]
+
+  storyCharacters StoryCharacter[]
+  storyPowers     StoryPower[]
+  storyScenes     StoryScene[]
+
+  storyCharacterPowers StoryCharacterPower[]
+
+  quickCaptureStories QuickCaptureStory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chapter {
+  id      String @id @default(uuid())
+  title   String
+  content String
+  order   Int
+
+  storyId String
+  story   Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([storyId, order])
+}
+
+// ====================
+// INDEPENDENT ENTITIES
+// ====================
+
+model Character {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  age         Int?
+  gender      String?
+  race        String?
+  occupation  String?
+  appearance  String?
+  personality String?
+  interests   String[]
+  hobbies     String[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  worldCharacters WorldCharacter[]
+  storyCharacters StoryCharacter[]
+  characterScenes CharacterScene[]
+
+  storyCharacterPowers StoryCharacterPower[]
+
+  quickCaptureCharacters QuickCaptureCharacter[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Power {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  worldPowers WorldPower[]
+  storyPowers StoryPower[]
+  scenePowers ScenePower[]
+
+  storyCharacterPowers StoryCharacterPower[]
+
+  quickCapturePowers QuickCapturePower[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Scene {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  storyScenes StoryScene[]
+  sceneWorlds SceneWorld[]
+
+  characterScenes CharacterScene[]
+  scenePowers     ScenePower[]
+
+  quickCaptureScenes QuickCaptureScene[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ====================
+// WORLD REFERENCES
+// ====================
+
+model WorldCharacter {
+  worldId     String
+  characterId String
+
+  world     World     @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@id([worldId, characterId])
+}
+
+model WorldPower {
+  worldId String
+  powerId String
+
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  power Power @relation(fields: [powerId], references: [id], onDelete: Cascade)
+
+  @@id([worldId, powerId])
+}
+
+// ====================
+// STORY REFERENCES
+// ====================
+
+model StoryCharacter {
+  storyId     String
+  characterId String
+
+  story     Story     @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  age         Int?
+  occupation  String?
+  appearance  String?
+  personality String?
+
+  @@id([storyId, characterId])
+}
+
+model StoryPower {
+  storyId String
+  powerId String
+
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  power Power @relation(fields: [powerId], references: [id], onDelete: Cascade)
+
+  @@id([storyId, powerId])
+}
+
+model StoryScene {
+  storyId String
+  sceneId String
+
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@id([storyId, sceneId])
+}
+
+// ====================
+// STORY CHARACTER POWERS
+// ====================
+
+model StoryCharacterPower {
+  storyId     String
+  characterId String
+  powerId     String
+
+  story     Story     @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  power     Power     @relation(fields: [powerId], references: [id], onDelete: Cascade)
+
+  @@id([storyId, characterId, powerId])
+}
+
+// ====================
+// SCENE REFERENCES
+// ====================
+
+model SceneWorld {
+  sceneId String  
+  worldId String
+
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@id([sceneId, worldId])
+}
+
+model CharacterScene {
+  characterId String
+  sceneId     String
+
+  character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  scene     Scene     @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@id([characterId, sceneId])
+}
+
+model ScenePower {
+  sceneId String
+  powerId String
+
+  scene Scene @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  power Power @relation(fields: [powerId], references: [id], onDelete: Cascade)
+
+  @@id([sceneId, powerId])
+}
+
+// ====================
+// QUICK CAPTURE
+// ====================
+
+model QuickCapture {
+  id          String           @id @default(uuid())
+  type        QuickCaptureType
+  name        String
+  description String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  archived Boolean @default(false)
+
+  quickCaptureWorlds     QuickCaptureWorld[]
+  quickCaptureStories    QuickCaptureStory[]
+  quickCaptureCharacters QuickCaptureCharacter[]
+  quickCapturePowers     QuickCapturePower[]
+  quickCaptureScenes     QuickCaptureScene[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum QuickCaptureType {
+  WORLD
+  CHARACTER
+  POWER
+  SCENE
+}
+
+// ====================
+// QUICK CAPTURE REFERENCES
+// ====================
+
+model QuickCaptureWorld {
+  quickCaptureId String
+  worldId        String
+
+  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
+  world        World        @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@id([quickCaptureId, worldId])
+}
+
+model QuickCaptureStory {
+  quickCaptureId String
+  storyId        String
+
+  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
+  story        Story        @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@id([quickCaptureId, storyId])
+}
+
+model QuickCaptureCharacter {
+  quickCaptureId String
+  characterId    String
+
+  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
+  character    Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@id([quickCaptureId, characterId])
+}
+
+model QuickCapturePower {
+  quickCaptureId String
+  powerId        String
+
+  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
+  power        Power        @relation(fields: [powerId], references: [id], onDelete: Cascade)
+
+  @@id([quickCaptureId, powerId])
+}
+
+model QuickCaptureScene {
+  quickCaptureId String
+  sceneId        String
+
+  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
+  scene        Scene        @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@id([quickCaptureId, sceneId])
 }
