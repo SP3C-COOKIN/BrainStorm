@@ -141,3 +141,4 @@ export const deletePower = async (req, res) => {
         });
     }
 };
+

@@ -1,13 +1,16 @@
 import prisma from "../lib/prisma.js";
 
 export const addCharacterToWorld = async (req, res) => {
+
     try {
+
         const world = await prisma.world.findFirst({
             where: {
                 id: req.params.worldId,
                 userId: req.user.id
             }
         });
+
         const character = await prisma.character.findFirst({
             where: {
                 id: req.params.characterId,
@@ -21,22 +24,40 @@ export const addCharacterToWorld = async (req, res) => {
             });
         }
 
+        const existingRelationship = await prisma.worldCharacter.findUnique({
+            where: {
+                worldId_characterId: {
+                    worldId: world.id,
+                    characterId: character.id
+                }
+            }
+        });
+
+        if (existingRelationship) {
+            return res.status(409).json({
+                message: "World-character relationship already exists"
+            });
+        }
+
         const relationship = await prisma.worldCharacter.create({
             data: {
                 worldId: world.id,
                 characterId: character.id
             }
         });
-        
+
         return res.status(201).json(relationship);
-    
+
     } catch (error) {
+
         console.error(error);
-        
+
         return res.status(500).json({
             message: "Couldn't create the relationship"
         });
+
     }
+
 };
 
 

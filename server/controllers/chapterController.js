@@ -51,6 +51,8 @@ export const createChapter = async (req, res) => {
             }
         });
 
+        return res.status(201).json(chapter);
+
     } catch(error) { 
         console.error(error)
 
