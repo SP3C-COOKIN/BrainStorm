@@ -1,5 +1,3 @@
-// middleware/scenePowerMiddleware.js
-
 import {
     createScenePowerSchema,
     getScenePowerSchema
@@ -16,7 +14,6 @@ export const validateCreateScenePower = (req, res, next) => {
     }
 
     req.body = result.data;
-
     next();
 };
 
@@ -30,7 +27,6 @@ export const validateGetScenePower = (req, res, next) => {
         });
     }
 
-    req.query = result.data;
-
+    req.validatedQuery = result.data;
     next();
 };

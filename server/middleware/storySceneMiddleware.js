@@ -1,5 +1,3 @@
-// storySceneMiddleware.ts
-
 import {
     createStorySceneSchema,
     getStorySceneSchema
@@ -16,7 +14,6 @@ export const validateCreateStoryScene = (req, res, next) => {
     }
 
     req.body = result.data;
-
     next();
 };
 
@@ -30,7 +27,6 @@ export const validateGetStoryScene = (req, res, next) => {
         });
     }
 
-    req.query = result.data;
-
+    req.validatedQuery = result.data;
     next();
 };

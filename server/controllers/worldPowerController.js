@@ -1,5 +1,3 @@
-// controllers/worldPowerController.js
-
 import prisma from "../lib/prisma.js";
 
 export const addPowerToWorld = async (req, res) => {
@@ -58,7 +56,6 @@ export const addPowerToWorld = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create world-power relationship"
         });
@@ -67,7 +64,7 @@ export const addPowerToWorld = async (req, res) => {
 
 export const getWorldPower = async (req, res) => {
     try {
-        const { worldId, powerId } = req.query;
+        const { worldId, powerId } = req.validatedQuery;
 
         if (worldId) {
             const world = await prisma.world.findFirst({
@@ -123,7 +120,6 @@ export const getWorldPower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get world-power relationships"
         });
@@ -190,7 +186,6 @@ export const deleteWorldPower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete world-power relationship"
         });

@@ -15,7 +15,9 @@ import storyPowerRoutes from "./routes/storyPowerRoutes.js";
 import storySceneRoutes from "./routes/storySceneRoutes.js";
 import worldSceneRoutes from "./routes/worldSceneRoutes.js";
 import characterSceneRoutes from "./routes/characterSceneRoutes.js"
+import worldPowerRoutes from "./routes/worldPowerRoutes.js";
 import scenePowerRoutes from "./routes/scenePowerRoutes.js";
+
 
 import rateLimit from 'express-rate-limit'
 
@@ -44,6 +46,7 @@ app.use("/api/story-power", storyPowerRoutes);
 app.use("/api/story-scene", storySceneRoutes);
 app.use("/api/world-scene", worldSceneRoutes);
 app.use("/api/character-scene", characterSceneRoutes);
+app.use("/api/world-power", worldPowerRoutes);
 app.use("/api/scene-powers", scenePowerRoutes);
 
 const PORT = 5000;

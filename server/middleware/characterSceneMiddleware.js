@@ -14,7 +14,6 @@ export const validateCreateCharacterScene = (req, res, next) => {
     }
 
     req.body = result.data;
-
     next();
 };
 
@@ -28,7 +27,6 @@ export const validateGetCharacterScene = (req, res, next) => {
         });
     }
 
-    req.query = result.data;
-
+    req.validatedQuery = result.data;
     next();
 };

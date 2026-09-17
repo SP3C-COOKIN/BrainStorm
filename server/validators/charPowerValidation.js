@@ -1,14 +1,10 @@
 import { z } from "zod";
 
 export const validateIdSchema = z.object({
-    storyId: z.string().uuid(),
+    storyId: z.string().uuid().optional(),
     characterId: z.string().uuid().optional(),
     powerId: z.string().uuid().optional()
 }).refine(
-    data => data.characterId || data.powerId,
-    { message: "Either Character's Id or Power's Id required"}
-)
-.refine(
-    data => (data.characterId || data.powerId),
-    {message: "Provide either Character's Id or Power's Id"}
-)
+    data => data.storyId || data.characterId || data.powerId,
+    { message: "Provide either storyId, characterId, or powerId" }
+);

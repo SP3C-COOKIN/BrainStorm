@@ -58,7 +58,6 @@ export const addStoryPower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create story-power relationship"
         });
@@ -67,7 +66,7 @@ export const addStoryPower = async (req, res) => {
 
 export const getStoryPower = async (req, res) => {
     try {
-        const { storyId, powerId } = req.query;
+        const { storyId, powerId } = req.validatedQuery;
 
         if (storyId) {
             const story = await prisma.story.findFirst({
@@ -125,7 +124,6 @@ export const getStoryPower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get story-power relationships"
         });
@@ -194,7 +192,6 @@ export const deleteStoryPower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete story-power relationship"
         });

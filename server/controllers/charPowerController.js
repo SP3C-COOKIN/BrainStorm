@@ -2,26 +2,25 @@ import prisma from "../lib/prisma.js"
 
 export const addCharacterPower = async (req, res) => {
     try {
-
         const { storyId, characterId, powerId } = req.body;
         
         const character = await prisma.character.findFirst({
             where: {
-                id: req.params.characterId,
+                id: characterId,
                 userId: req.user.id
             }
         });
 
         const power = await prisma.power.findFirst({
             where: {
-                id: req.params.powerId,
+                id: powerId,
                 userId: req.user.id
             }
         });
 
         const story = await prisma.story.findFirst({
             where: {
-                id: req.params.storyId,
+                id: storyId,
                 world: {
                     userId: req.user.id
                 }
@@ -34,6 +33,20 @@ export const addCharacterPower = async (req, res) => {
             });
         }
 
+        const existing = await prisma.storyCharacterPower.findUnique({
+            where: {
+                storyId_characterId_powerId: {
+                    storyId: story.id,
+                    characterId: character.id,
+                    powerId: power.id
+                }
+            }
+        });
+
+        if (existing) {
+            return res.status(409).json({ message: "Relationship already exists" });
+        }
+    
         const relationship = await prisma.storyCharacterPower.create({  
             data: {
                 storyId: story.id,
@@ -54,23 +67,30 @@ export const addCharacterPower = async (req, res) => {
 
 export const getCharactersPowers = async (req, res) => {
     try {
-        const { storyId, characterId, powerId } = req.query;
+        const { storyId, characterId, powerId } = req.validatedQuery;
 
-        const story = await prisma.story.findFirst({
-            where: {
-                id: storyId,
-                world: {
-                    userId: req.user.id
+        // Scenario 1: Fetching by Story ID
+        if (storyId) {
+            const story = await prisma.story.findFirst({
+                where: {
+                    id: storyId,
+                    world: { userId: req.user.id }
                 }
-            }
-        });
-
-        if (!story) {
-            return res.status(404).json({
-                message: "Story doesn't belong to the User"
             });
+
+            if (!story) {
+                return res.status(404).json({ message: "Story not found" });
+            }
+
+            const storyPowers = await prisma.storyCharacterPower.findMany({
+                where: { storyId },
+                include: { character: true, power: true }
+            });
+
+            return res.status(200).json(storyPowers);
         }
 
+        // Scenario 2: Fetching by Character ID
         if (characterId) {
             const character = await prisma.character.findFirst({
                 where: {
@@ -79,26 +99,19 @@ export const getCharactersPowers = async (req, res) => {
                 }
             });
 
-        if (!character) {
-            return res.status(404).json({
-                message: "Couldn't find the character"
-            });
-        };
+            if (!character) {
+                return res.status(404).json({ message: "Character not found" });
+            }
 
-        const characterPowers =
-            await prisma.storyCharacterPower.findMany({
-                where: {
-                    storyId,
-                    characterId
-                },
-                include: {
-                    power: true
-                }
+            const characterPowers = await prisma.storyCharacterPower.findMany({
+                where: { characterId },
+                include: { power: true, story: true }
             });
 
-        return res.status(200).json(characterPowers);
+            return res.status(200).json(characterPowers);
         }
 
+        // Scenario 3: Fetching by Power ID
         if (powerId) {
             const power = await prisma.power.findFirst({
                 where: {
@@ -108,26 +121,22 @@ export const getCharactersPowers = async (req, res) => {
             });
 
             if (!power) {
-                return res.status(404).json({
-                    message: "power not found"
-                }); 
+                return res.status(404).json({ message: "Power not found" }); 
             }
 
             const powerCharacters = await prisma.storyCharacterPower.findMany({
-                where: {
-                    storyId,
-                    powerId,
-                }, 
-                include: {
-                    character: true
-                }
+                where: { powerId }, 
+                include: { character: true, story: true }
             });
+
             return res.status(200).json(powerCharacters);
         }
 
+        // Fallback
+        return res.status(400).json({ message: "Provide storyId, characterId, or powerId" });
+
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get character powers"
         });
@@ -136,21 +145,30 @@ export const getCharactersPowers = async (req, res) => {
 
 export const deleteCharacterPower = async (req, res) => {
     try {
-        const relation = await prisma.storyCharacterPower.delete({
+        // FIX: Ensure existence before attempting to delete to prevent Prisma 500 error
+        const { storyId, characterId, powerId } = req.params;
+
+        const existing = await prisma.storyCharacterPower.findUnique({
             where: {
-                storyId_characterId_powerId: {
-                storyId: req.params.storyId,
-                characterId: req.params.characterId,
-                powerId: req.params.powerId
+                storyId_characterId_powerId: { storyId, characterId, powerId }
             }
-        }
         });
+
+        if (!existing) {
+            return res.status(404).json({ message: "Character power relationship not found" });
+        }
+
+        await prisma.storyCharacterPower.delete({
+            where: {
+                storyId_characterId_powerId: { storyId, characterId, powerId }
+            }
+        });
+
         return res.status(200).json({
             message: "Character power deleted successfully"
         });
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete character power"
         });

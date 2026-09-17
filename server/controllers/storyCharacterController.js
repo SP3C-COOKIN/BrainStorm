@@ -1,9 +1,7 @@
 import prisma from "../lib/prisma.js";
 
 export const addStoryCharacter = async (req, res) => {
-
     try {
-
         const { storyId, characterId } = req.body;
 
         const story = await prisma.story.findFirst({
@@ -53,21 +51,16 @@ export const addStoryCharacter = async (req, res) => {
         return res.status(201).json(relationship);
 
     } catch (error) {
-
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create the story-character relationship"
         });
-
     }
-
 };
-
 
 export const getStoryCharacter = async (req, res) => {
     try {
-        const { storyId, characterId } = req.query;
+        const { storyId, characterId } = req.validatedQuery;
 
         if (storyId) {
             const story = await prisma.story.findFirst({
@@ -125,7 +118,6 @@ export const getStoryCharacter = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get story character"
         });
@@ -194,10 +186,8 @@ export const deleteStoryCharacter = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete story-character relationship"
         });
     }
 };
-

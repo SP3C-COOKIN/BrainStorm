@@ -1,6 +1,5 @@
 import prisma from "../lib/prisma.js";
 
-
 export const addSceneToWorld = async (req, res) => {
     try {
         const { sceneId, worldId } = req.body;
@@ -57,17 +56,15 @@ export const addSceneToWorld = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create scene-world relationship"
         });
     }
 };
 
-
 export const getSceneWorld = async (req, res) => {
     try {
-        const { sceneId, worldId } = req.query;
+        const { sceneId, worldId } = req.validatedQuery;
 
         if (sceneId) {
             const scene = await prisma.scene.findFirst({
@@ -123,7 +120,6 @@ export const getSceneWorld = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get scene-world relationships"
         });
@@ -190,7 +186,6 @@ export const deleteSceneWorld = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete scene-world relationship"
         });

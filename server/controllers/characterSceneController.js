@@ -1,5 +1,3 @@
-// controllers/characterSceneController.js
-
 import prisma from "../lib/prisma.js";
 
 export const addCharacterToScene = async (req, res) => {
@@ -58,7 +56,6 @@ export const addCharacterToScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create character-scene relationship"
         });
@@ -67,7 +64,7 @@ export const addCharacterToScene = async (req, res) => {
 
 export const getCharacterScene = async (req, res) => {
     try {
-        const { characterId, sceneId } = req.query;
+        const { characterId, sceneId } = req.validatedQuery;
 
         if (characterId) {
             const character = await prisma.character.findFirst({
@@ -123,7 +120,6 @@ export const getCharacterScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get character-scene relationships"
         });
@@ -190,7 +186,6 @@ export const deleteCharacterScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete character-scene relationship"
         });

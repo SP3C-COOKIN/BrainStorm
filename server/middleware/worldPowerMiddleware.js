@@ -1,5 +1,3 @@
-// middleware/worldPowerMiddleware.js
-
 import {
     createWorldPowerSchema,
     getWorldPowerSchema
@@ -16,7 +14,6 @@ export const validateCreateWorldPower = (req, res, next) => {
     }
 
     req.body = result.data;
-
     next();
 };
 
@@ -30,7 +27,6 @@ export const validateGetWorldPower = (req, res, next) => {
         });
     }
 
-    req.query = result.data;
-
+    req.validatedQuery = result.data;
     next();
 };

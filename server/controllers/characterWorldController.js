@@ -183,6 +183,19 @@ export const deleteCharacterToWorld = async (req, res) => {
             });
         }
 
+        const existing = await prisma.worldCharacter.findUnique({
+            where: {
+                worldId_characterId: {
+                    characterId: character.id,
+                    worldId: world.id
+                }
+            }
+        });
+
+        if (!existing) {
+            return res.status(404).json({ message: "Relationship not found" });
+        }
+
         await prisma.worldCharacter.delete({
             where: {
                 worldId_characterId: {

@@ -9,6 +9,7 @@ export const validateIdController = async (req, res, next) => {
             errors: result.error.issues
         });
     }
-    req.query = result.data
+
+    req.validatedQuery = result.data
     next();
 };

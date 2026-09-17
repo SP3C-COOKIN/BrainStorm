@@ -1,5 +1,3 @@
-// controllers/scenePowerController.js
-
 import prisma from "../lib/prisma.js";
 
 export const addPowerToScene = async (req, res) => {
@@ -58,7 +56,6 @@ export const addPowerToScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create scene-power relationship"
         });
@@ -67,7 +64,7 @@ export const addPowerToScene = async (req, res) => {
 
 export const getScenePower = async (req, res) => {
     try {
-        const { sceneId, powerId } = req.query;
+        const { sceneId, powerId } = req.validatedQuery;
 
         if (sceneId) {
             const scene = await prisma.scene.findFirst({
@@ -123,7 +120,6 @@ export const getScenePower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get scene-power relationships"
         });
@@ -190,7 +186,6 @@ export const deleteScenePower = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete scene-power relationship"
         });

@@ -58,7 +58,6 @@ export const addStoryScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Couldn't create story-scene relationship"
         });
@@ -67,7 +66,7 @@ export const addStoryScene = async (req, res) => {
 
 export const getStoryScene = async (req, res) => {
     try {
-        const { storyId, sceneId } = req.query;
+        const { storyId, sceneId } = req.validatedQuery;
 
         if (storyId) {
             const story = await prisma.story.findFirst({
@@ -125,7 +124,6 @@ export const getStoryScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not get story-scene relationships"
         });
@@ -194,7 +192,6 @@ export const deleteStoryScene = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Could not delete story-scene relationship"
         });
