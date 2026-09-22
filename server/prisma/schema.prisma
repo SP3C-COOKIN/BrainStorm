@@ -330,33 +330,3 @@ model QuickCaptureStory {
 
   @@id([quickCaptureId, storyId])
 }
-
-model QuickCaptureCharacter {
-  quickCaptureId String
-  characterId    String
-
-  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
-  character    Character    @relation(fields: [characterId], references: [id], onDelete: Cascade)
-
-  @@id([quickCaptureId, characterId])
-}
-
-model QuickCapturePower {
-  quickCaptureId String
-  powerId        String
-
-  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
-  power        Power        @relation(fields: [powerId], references: [id], onDelete: Cascade)
-
-  @@id([quickCaptureId, powerId])
-}
-
-model QuickCaptureScene {
-  quickCaptureId String
-  sceneId        String
-
-  quickCapture QuickCapture @relation(fields: [quickCaptureId], references: [id], onDelete: Cascade)
-  scene        Scene        @relation(fields: [sceneId], references: [id], onDelete: Cascade)
-
-  @@id([quickCaptureId, sceneId])
-}

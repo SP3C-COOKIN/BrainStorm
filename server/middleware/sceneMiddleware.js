@@ -2,9 +2,15 @@ import { createSceneSchema, updateSceneSchema } from "../validators/sceneValidat
 
 export const createSceneMiddleware = (req, res, next) => {
     try {
-        const validatedData = createSceneSchema.parse(req.body);
+        const result = createSceneSchema.safeParse(req.body);
 
-        req.body = validatedData;
+        if (!result.success) {
+            return res.status(400).json({
+                message: "invalid data",
+                errors: result.error.issues
+            });
+        }
+        req.body = result.data;
 
         next();
     } catch (error) {
