@@ -22,6 +22,9 @@ import quickSceneRoutes from "./routes/quickSceneRoutes.js";
 import quickPowerRoutes from "./routes/quickPowerRoutes.js";
 import quickWorldRoutes from "./routes/quickWorldRoutes.js";
 import quickStoryRoutes from "./routes/quickStoryRoutes.js";
+import characterDevRoutes from "./routes/charDevelopRoutes.js"
+import powerDevRoutes from "./routes/powerDevelopRoutes.js";
+import sceneDevRoutes from "./routes/sceneDevelopRoutes.js";
 
 import rateLimit from 'express-rate-limit'
 
@@ -56,7 +59,10 @@ app.use("/api/quick-character", quickCharacterRoutes);
 app.use("/api/quick-scene", quickSceneRoutes);
 app.use("/api/quick-power", quickPowerRoutes);
 app.use("/api/quick-world", quickWorldRoutes);
-app.use("/api/quick-story", quickStoryRoutes)
+app.use("/api/quick-story", quickStoryRoutes);
+app.use("/api/char-develop", characterDevRoutes);
+app.use("/api/power-develop", powerDevRoutes);
+app.use("/api/scene-develop", sceneDevRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {

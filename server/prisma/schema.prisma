@@ -110,6 +110,12 @@ model Character {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  quickCaptureId String? @unique
+  quickCapture QuickCapture? @relation(
+    fields: [quickCaptureId]
+    reference: [id]
+  )
+
   worldCharacters WorldCharacter[]
   storyCharacters StoryCharacter[]
   characterScenes CharacterScene[]
@@ -288,6 +294,8 @@ model QuickCapture {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  character Character?
+
   archived Boolean @default(false)
 
   quickCaptureWorlds     QuickCaptureWorld[]
@@ -301,7 +309,6 @@ model QuickCapture {
 }
 
 enum QuickCaptureType {
-  WORLD
   CHARACTER
   POWER
   SCENE
