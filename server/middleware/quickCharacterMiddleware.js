@@ -1,3 +1,5 @@
+import { createQuickCharacterSchema, editQuickCharacterSchema} from "../validators/quickCharacterValidation.js"
+
 export const createQuickCharMiddleware = async (req, res, next) => {
     const result = await createQuickCharacterSchema.safeParse(req.body);
 

@@ -144,6 +144,32 @@ export const deleteCharacter = async (req, res) => {
             });
         }
 
+        if (character.quickCaptureId) {
+            const quickCapture = await prisma.quickCapture.findFirst({
+                where: {
+                    id: character.quickCaptureId,
+                    userId: req.user.id
+                }
+            });
+
+            if (!quickCapture) {
+                return res.status(404).json({
+                    message: "couldn't find the quick capture"
+                })
+            }
+
+            if (quickCapture) {
+                await prisma.quickCapture.update({
+                    where: {
+                        id: quickCapture.id
+                    },
+                    data: {
+                        archived: false
+                    }
+                });
+            }
+        };
+
         await prisma.character.delete({
             where: {
                 id: character.id

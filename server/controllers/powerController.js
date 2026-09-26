@@ -120,7 +120,31 @@ export const deletePower = async (req, res) => {
 
         if (!power) {
             return res.status(404).json({
-                message: "Power not found"
+                message: "Couldn't find the power"
+            });
+        }
+
+        if (power.quickCaptureId) {
+            const quickCapture = await prisma.quickCapture.findFirst({
+                where: {
+                    id: power.quickCaptureId,
+                    userId: req.user.id
+                }
+            });
+
+            if (!quickCapture) {
+                return res.status(404).json({
+                    message: "Couldn't find the quick capture"
+                });
+            }
+
+            await prisma.quickCapture.update({
+                where: {
+                    id: quickCapture.id
+                },
+                data: {
+                    archived: false
+                }
             });
         }
 
@@ -135,10 +159,8 @@ export const deletePower = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
-            message: "Could not delete the power"
+            message: "Failed to delete the power"
         });
     }
 };
-

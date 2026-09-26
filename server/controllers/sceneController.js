@@ -116,7 +116,31 @@ export const deleteScene = async (req, res) => {
 
         if (!scene) {
             return res.status(404).json({
-                message: "Scene not found"
+                message: "Couldn't find the scene"
+            });
+        }
+
+        if (scene.quickCaptureId) {
+            const quickCapture = await prisma.quickCapture.findFirst({
+                where: {
+                    id: scene.quickCaptureId,
+                    userId: req.user.id
+                }
+            });
+
+            if (!quickCapture) {
+                return res.status(404).json({
+                    message: "Couldn't find the quick capture"
+                });
+            }
+
+            await prisma.quickCapture.update({
+                where: {
+                    id: quickCapture.id
+                },
+                data: {
+                    archived: false
+                }
             });
         }
 
@@ -129,12 +153,10 @@ export const deleteScene = async (req, res) => {
         return res.status(200).json({
             message: "Scene deleted successfully"
         });
-
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
-            message: "Could not delete the scene"
+            message: "Failed to delete the scene"
         });
     }
 };

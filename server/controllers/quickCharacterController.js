@@ -60,7 +60,7 @@ export const editQuickCharacter = async (req, res) => {
 
         const updatedQuickCharacter = await prisma.quickCapture.update({
             where: {
-                id: character.id
+                id: quickCharacter.id
             },
             data: req.body
         });

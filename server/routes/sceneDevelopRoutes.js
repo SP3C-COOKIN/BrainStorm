@@ -6,12 +6,10 @@ import {
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
-import { devSceneMiddleware } from "../middleware/sceneDevMiddleware.js";
-
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post("/:quickCaptureId", devSceneMiddleware, devSceneController);
+router.post("/:quickCaptureId", devSceneController);
 
 export default router;

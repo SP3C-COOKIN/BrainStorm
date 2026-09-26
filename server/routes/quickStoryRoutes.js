@@ -14,8 +14,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post("/:quickCaptureId/scene/:sceneId", quickStoryMiddleware, createQuickStoryController);
+router.post("/:quickCaptureId/scene/:storyId", quickStoryMiddleware, createQuickStoryController);
 router.get("/:quickCaptureId", getQuickStoriesController);
-router.delete("/:quickCaptureId/scene/:sceneId", deleteQuickStoryController)
+router.delete("/:quickCaptureId/scene/:storyId", deleteQuickStoryController)
 
 export default router;

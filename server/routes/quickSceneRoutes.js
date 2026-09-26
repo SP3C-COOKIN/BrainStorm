@@ -25,5 +25,5 @@ router.get("/", getQuickScene);
 router.patch("/:id", editQuickSceneMiddleware, editQuickScene);
 
 router.delete("/:id", deleteQuickScene);
-
+    
 export default router;
