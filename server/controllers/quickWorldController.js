@@ -2,7 +2,7 @@ import prisma from "../lib/prisma.js";
 
 export const createQuickWorldController = async (req, res) => {
     try {
-        const { worldId, quickCaptureId } = req.body;
+        const { worldId, quickCaptureId } = req.params;
 
         const world = await prisma.world.findFirst({
             where: {

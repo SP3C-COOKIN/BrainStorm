@@ -39,7 +39,7 @@
   app.use(cors());
   app.use(express.json());
 
-  app.use('/api/auth', authRoutes);
+  app.use('/api/auth', authLimiter, authRoutes);
   app.use('/api/worlds', worldRoutes);
   app.use('/api', storyRoutes);
   app.use('/api', chapterRoutes);

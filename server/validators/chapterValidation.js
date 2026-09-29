@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const createChapterSchema = z.object({
-    title: z.string().min(1).max(100).optional(),
-    content: z.string().min(1).max(10000),
+    title: z.string().min(1).max(100),
+    content: z.string().min(1).max(10000).optioanl(),
 });
 
 export const updateChapterSchema = createChapterSchema

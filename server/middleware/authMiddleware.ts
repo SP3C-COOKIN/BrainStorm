@@ -19,7 +19,7 @@ export const authMiddleware = (
         });
       }
 
-      const token = authHeader.split(" ")[1];
+      const token = authHeader.replace(/^Bearer\s+/, " ");
 
       const jwtSecret = process.env.JWT_SECRET;
 

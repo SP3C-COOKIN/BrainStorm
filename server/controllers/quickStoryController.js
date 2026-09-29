@@ -107,7 +107,7 @@ export const getQuickStoriesController = async (req, res) => {
 
 export const deleteQuickStoryController = async (req, res) => {
     try{
-        const { quickCaptureId, storyId } = req.body;
+        const { quickCaptureId, storyId } = req.params;
 
         const quickCapture = await prisma.quickCapture.findFirst({
             where: {

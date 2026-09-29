@@ -145,17 +145,26 @@ export const getCharactersPowers = async (req, res) => {
 
 export const deleteCharacterPower = async (req, res) => {
     try {
-        // FIX: Ensure existence before attempting to delete to prevent Prisma 500 error
         const { storyId, characterId, powerId } = req.params;
 
-        const existing = await prisma.storyCharacterPower.findUnique({
+        // Verify the relationship exists AND belongs to the authenticated user
+        const existing = await prisma.storyCharacterPower.findFirst({
             where: {
-                storyId_characterId_powerId: { storyId, characterId, powerId }
+                storyId: storyId,
+                characterId: characterId,
+                powerId: powerId,
+                story: {
+                    world: {
+                        userId: req.user.id
+                    }
+                }
             }
         });
 
         if (!existing) {
-            return res.status(404).json({ message: "Character power relationship not found" });
+            return res.status(404).json({ 
+                message: "Character power relationship not found or you lack permission to delete it" 
+            });
         }
 
         await prisma.storyCharacterPower.delete({

@@ -8,13 +8,11 @@ import {
 
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
-import {quickStoryMiddleware} from "../middleware/quickStoryMiddleware.js"
-
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post("/:quickCaptureId/scene/:storyId", quickStoryMiddleware, createQuickStoryController);
+router.post("/:quickCaptureId/scene/:storyId", createQuickStoryController);
 router.get("/:quickCaptureId", getQuickStoriesController);
 router.delete("/:quickCaptureId/scene/:storyId", deleteQuickStoryController)
 

@@ -12,8 +12,7 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.post("/", addCharacterPower);
-// FIX: Add validation middleware here
-router.get("/", validateIdController, getCharactersPowers);
+router.get("/", validateIdController, validateIdController, getCharactersPowers);
 router.delete("/:storyId/:characterId/:powerId", deleteCharacterPower);
 
 export default router;

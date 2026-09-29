@@ -46,7 +46,6 @@ export const devSceneController = async (req, res) => {
             data: quickCapture.quickCaptureWorlds.map((world) => ({
                 worldId: world.worldId,
                 sceneId: scene.id,
-                userId: req.user.id
             }))
         });
 
@@ -54,7 +53,6 @@ export const devSceneController = async (req, res) => {
             data: quickCapture.quickCaptureStories.map((story) => ({
                 storyId: story.storyId,
                 sceneId: scene.id,
-                userId: req.user.id
             }))
         });
 

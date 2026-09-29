@@ -68,47 +68,28 @@ export const devPowerController = async (req, res) => {
         await prisma.worldPower.createMany({
 
             data: quickCapture.quickCaptureWorlds.map((world) => ({
-
                 worldId: world.worldId,
-
-                powerId: power.id,
-
-                userId: req.user.id
-
+                powerId: power.id
             }))
 
         });
 
         await prisma.storyPower.createMany({
-
             data:
-
                 quickCapture.quickCaptureStories.map((story) => ({
-
                     storyId: story.storyId,
-
                     powerId: power.id,
-
-                    userId: req.user.id
-
                 }))
-
         });
 
         await prisma.quickCapture.update({
-
             where: {
-
                 id: quickCaptureId
-
             },
 
             data: {
-
                 archived: true
-
             }
-
         });
 
         return res.status(200).json(power);

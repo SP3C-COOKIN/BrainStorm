@@ -44,8 +44,7 @@ export const devCharacterController = async (req, res) => {
         await prisma.worldCharacter.createMany({
             data: quickCapture.quickCaptureWorlds.map((world) => ({
                 worldId: world.worldId,
-                characterId: character.id,
-                userId: req.user.id
+                characterId: character.id
             }))
         });
 
@@ -53,8 +52,7 @@ export const devCharacterController = async (req, res) => {
             data:
                 quickCapture.quickCaptureStories.map((story) => ({
                     storyId: story.storyId,
-                    characterId: character.id,
-                    userId: req.user.id
+                    characterId: character.id
                 }))
         });
         
