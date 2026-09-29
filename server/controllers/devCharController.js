@@ -36,7 +36,8 @@ export const devCharacterController = async (req, res) => {
         const character = await prisma.character.create({
             data: {
                 name: quickCapture.name,
-                description: quickCapture.description
+                description: quickCapture.description,
+                userId: req.user.id
             }
         });
 
@@ -66,7 +67,7 @@ export const devCharacterController = async (req, res) => {
         }
     });
 
-    return res.status(200).json(character);
+    return res.status(201).json(character);
     } catch(error) {
         console.error(error);
         return res.status(500).json({

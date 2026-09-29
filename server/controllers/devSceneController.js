@@ -2,11 +2,12 @@ import prisma from "../lib/prisma.js";
 
 export const devSceneController = async (req, res) => {
     try {
+        // MUST MATCH the router definition exactly
         const { quickCaptureId } = req.params;
 
         const quickCapture = await prisma.quickCapture.findFirst({
             where: {
-                id: quickCaptureId,
+                id: quickCaptureId, 
                 userId: req.user.id
             },
             include: {
@@ -70,7 +71,6 @@ export const devSceneController = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-
         return res.status(500).json({
             message: "Something went wrong"
         });

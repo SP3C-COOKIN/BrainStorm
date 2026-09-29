@@ -1,18 +1,18 @@
-import { z } from "zod"; // this imports { z }?? from zod what is {z} tho?
+import { z } from "zod";
 
 // SIGN-UP VALIDATION
 
 export const signupSchema = z.object({ 
-  username: z // we put the username as z? why? or what is it then?
-    .string() // we expect a string for username
-    .min(3, "Username must be at least 3 characters") // minimum 3 characters and if less than that are there when submitted show the error message
-    .max(20, "Username cannot exceed 20 characters") // max 20 chars if not then error message, last time I used "alert" lets see how this one works
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters") 
+    .max(20, "Username cannot exceed 20 characters")
     .regex(
       /^[a-z0-9_]+$/,
       "Username can only contain lowercase letters, numbers, and underscores"
     ),
 
-  email: z //z again aaaaaaaaa
+  email: z
     .email("Please enter a valid email address"), 
 
   password: z
@@ -33,4 +33,7 @@ export const loginSchema = z.object({
     .string()
     .min(1, "Password is Required")
     .max(72, "Password is too long"),
-})
+});
+
+export type signupBody = z.infer<typeof signupSchema>;
+export type loginBody = z.infer<typeof loginSchema>;

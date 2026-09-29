@@ -59,13 +59,10 @@ export const devPowerController = async (req, res) => {
         const power = await prisma.power.create({
 
             data: {
-
                 name: quickCapture.name,
-
-                description: quickCapture.description
-
+                description: quickCapture.description,
+                userId: req.user.id
             }
-
         });
 
         await prisma.worldPower.createMany({

@@ -1,13 +1,17 @@
 import prisma from "../lib/prisma.js";
 
+import {Request, Response } from "express";
+
 import { signupSchema } from "../validators/authValidation.js";
 import { loginSchema } from "../validators/authValidation.js";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
 // SIGN-UP FUNCTION
-export const signup = async (req, res) => {
+export const signup = async (req: Request, res: Response) => {
+
   const validatedData = signupSchema.parse(req.body);
 
   // Check if Username or Email already Exists
@@ -43,9 +47,15 @@ export const signup = async (req, res) => {
     },
   });
 
+  const jwtSecret = process.env.JWT_SECRET;
+
+  if (!jwtSecret) {
+    throw new Error("JWT_SECRET is missing");
+  }
+
   const token = jwt.sign(
     { userId: user.id },
-    process.env.JWT_SECRET,
+    jwtSecret,
     { expiresIn: "7d" }
   );
 
@@ -57,7 +67,7 @@ export const signup = async (req, res) => {
 };
 
 // LOG-IN FUNCTION
-export const login = async (req, res) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const validatedData = loginSchema.parse(req.body);
 
@@ -87,9 +97,15 @@ export const login = async (req, res) => {
       });
     }
 
+    const jwtSecret = process.env.JWT_SECRET;
+
+    if (!jwtSecret) {
+      throw new Error("JWT_Secret is missing")
+    }
+
     const token = jwt.sign(
       { userId: existingUser.id },
-      process.env.JWT_SECRET,
+      jwtSecret,
       { expiresIn: "7d" }
     );
 
@@ -106,7 +122,7 @@ export const login = async (req, res) => {
   } catch (error) {
     return res.status(400).json({
       message: "Login failed",
-      error: error.message,
+      error: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
